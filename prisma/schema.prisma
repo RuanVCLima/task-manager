@@ -11,3 +11,104 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum UserRole{
+  admin
+  member
+}
+
+enum TasksStatus{
+  pending
+  inProgress
+  completed
+}
+
+enum TasksPriority{
+  high
+  medium
+  low
+}
+
+model Users{
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String
+
+  role UserRole @default(member)
+
+  teams Teams[]
+  tasks Tasks[]
+  tasksHistory TasksHistory[]
+  teamMembers TeamMembers[]
+
+  createAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+
+model Teams {
+  id String @id @default(uuid())
+  name String
+  description String
+
+  userId String @map("user_id")
+  users Users @relation(fields: [userId], references: [id])
+
+  tasks Tasks[]
+  teamMembers TeamMembers[]
+
+  createAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("teams")
+
+}
+
+model TeamMembers{
+  id String @id @default(uuid())
+
+  userId String @map("user_id")
+  users Users @relation(fields: [userId], references: [id])
+
+  teamsId String @map("teams_id")
+  teams Teams @relation(fields: [teamsId], references: [id])
+
+
+}
+
+
+model Tasks{
+  id String @id @default(uuid())
+  title String
+  description String
+
+  status TasksStatus @default(pending)
+  priority TasksPriority @default(low)
+
+  assignedTo String @map("assigned_to")
+  user Users @relation(fields: [assignedTo], references: [id])
+
+  teamId String @map("team_id")
+  teams Teams @relation(fields: [teamId], references: [id])
+
+  taskHistory TasksHistory[] 
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("tasks")
+
+}
+
+model TasksHistory{
+  id String @id @default(uuid())
+
+  taskId String @map("task_id")
+  tasks Tasks @relation(fields: [taskId], references: [id])
+
+  changedBy String @map("changed_by")
+  users Users @relation(fields: [changedBy], references: [id])
+}
