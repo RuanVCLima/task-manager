@@ -76,7 +76,8 @@ model TeamMembers{
   teamsId String @map("teams_id")
   teams Teams @relation(fields: [teamsId], references: [id])
 
-
+  @@unique([userId, teamsId])
+  @@map("team_members")
 }
 
 
@@ -111,4 +112,6 @@ model TasksHistory{
 
   changedBy String @map("changed_by")
   users Users @relation(fields: [changedBy], references: [id])
+
+  @@map("task_history")
 }
