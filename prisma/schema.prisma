@@ -116,5 +116,10 @@ model TasksHistory{
   changedBy String @map("changed_by")
   users Users @relation(fields: [changedBy], references: [id])
 
+  oldStatus TasksStatus @default(pending) @map("old_status")
+  newStatus TasksStatus @map("new_status")
+  changedtAt DateTime @updatedAt @map("changed_at")
+
+
   @@map("task_history")
 }
