@@ -63,6 +63,18 @@ class TeamsController {
 
     return response.json(teams);
   }
+
+  async delete(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      id: z.uuid(),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+
+    await prisma.teams.delete({ where: { id } });
+
+    return response.status(201).json();
+  }
 }
 
 export { TeamsController };
