@@ -31,10 +31,8 @@ class TeamsController {
 
     const teams = await prisma.teams.findMany({
       where: {
-        users: {
-          name: {
-            contains: name.trim(),
-          },
+        name: {
+          contains: name.trim(),
         },
       },
       orderBy: { createAt: 'desc' },
@@ -42,6 +40,28 @@ class TeamsController {
     });
 
     response.json(teams);
+  }
+
+  async update(request: Request, response: Response) {
+    const bodySchema = z.object({
+      id: z.uuid(),
+      name: z.string().trim().min(1, 'name is required'),
+      description: z.string(),
+      userId: z.uuid(),
+    });
+
+    const { id, name, description, userId } = bodySchema.parse(request.body);
+
+    const teams = await prisma.teams.update({
+      data: {
+        name,
+        description,
+        userId,
+      },
+      where: { id },
+    });
+
+    return response.json(teams);
   }
 }
 
