@@ -40,6 +40,26 @@ class TeamMembersController {
 
     return response.status(201).json(teamsMembers);
   }
+
+  async delete(request: Request, response: Response) {
+    const bodySchema = z.object({
+      userId: z.uuid(),
+      teamsId: z.uuid(),
+    });
+
+    const { userId, teamsId } = bodySchema.parse(request.body);
+
+    await prisma.teamMembers.delete({
+      where: {
+        userId_teamsId: {
+          userId,
+          teamsId,
+        },
+      },
+    });
+
+    return response.status(201).json();
+  }
 }
 
 export { TeamMembersController };

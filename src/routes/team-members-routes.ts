@@ -11,6 +11,12 @@ teamMembersRoutes.post(
   teamMembersController.create,
 );
 
+teamMembersRoutes.delete(
+  '/',
+  verifyUserAuthorization(['admin']),
+  teamMembersController.delete,
+);
+
 teamMembersRoutes.get('/', teamMembersController.index);
 
 export { teamMembersRoutes };
