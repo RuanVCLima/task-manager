@@ -11,4 +11,6 @@ teamMembersRoutes.post(
   teamMembersController.create,
 );
 
+teamMembersRoutes.get('/', teamMembersController.index);
+
 export { teamMembersRoutes };

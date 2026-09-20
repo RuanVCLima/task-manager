@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { AppError } from '../utils/AppError';
 import { prisma } from '../database/prisma';
 
 class TeamMembersController {
@@ -12,12 +11,6 @@ class TeamMembersController {
 
     const { userId, teamsId } = bodySchema.parse(request.body);
 
-    // if (!userId || !teamsId) {
-    //   throw new AppError('UserId and Teamsid are required');
-    // }
-    console.log('2 - validation passed');
-    console.log({ userId, teamsId });
-
     const teamMember = await prisma.teamMembers.create({
       data: {
         userId,
@@ -25,12 +18,27 @@ class TeamMembersController {
       },
     });
 
-    if (!teamMember) {
-      throw new AppError('user and team does not exist!');
-    }
-
-    console.log('3 - database insert completed');
     return response.status(201).json(teamMember);
+  }
+
+  async index(request: Request, response: Response) {
+    const bodySchema = z.object({
+      teamsId: z.uuid(),
+    });
+
+    const { teamsId } = bodySchema.parse(request.body);
+
+    const teamsMembers = await prisma.teamMembers.findMany({
+      where: {
+        teamsId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: { users: true },
+    });
+
+    return response.status(201).json(teamsMembers);
   }
 }
 
