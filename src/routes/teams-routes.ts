@@ -11,4 +11,6 @@ teamsRoutes.post(
   teamsController.create,
 );
 
+teamsRoutes.get('/', verifyUserAuthorization(['admin']), teamsController.index);
+
 export { teamsRoutes };
