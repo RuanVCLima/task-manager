@@ -1,17 +1,17 @@
-import "dotenv/config"
-import { PrismaPg } from "@prisma/adapter-pg"
-import { PrismaClient } from "@prisma/client/extension"
+import 'dotenv/config';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '@prisma/client/extension';
 
-const databaseurl = process.env.DATABASE_URL
+const databaseurl = process.env.DATABASE_URL;
 
-if(!databaseurl){
-    throw new Error("DATABASE_URL is not defined")
+if (!databaseurl) {
+  throw new Error('DATABASE_URL is not defined');
 }
 
 const adapter = new PrismaPg({
-    connectionString: databaseurl
-})
+  connectionString: databaseurl,
+});
 
 export const prisma = new PrismaClient({
-    adapter,
-})
+  adapter,
+});

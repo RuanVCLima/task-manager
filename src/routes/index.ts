@@ -1,11 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { userRoutes } from "./users-routes";
+import { userRoutes } from './users-routes';
 
-const routes = Router()
-
+const routes = Router();
 
 //public routes
-routes.use(userRoutes)
+routes.use(userRoutes);
 
-export {routes}
+export { routes };

@@ -4,7 +4,9 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "dev": "tsx watch src/server"
+    "dev": "tsx watch src/server",
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "author": "Ruan Victor",
   "license": "ISC",
@@ -18,12 +20,16 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.6",
     "@types/node": "^22.20.4",
     "@types/pg": "^8.23.1",
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.8",
     "prisma": "^7.10.0",
     "tsx": "^4.23.15",
-    "typescript": "5.9"
+    "typescript": "5.9",
+    "typescript-eslint": "^8.70.0"
   }
 }
