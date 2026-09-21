@@ -104,6 +104,18 @@ class TaskController {
 
     return response.json(task);
   }
+
+  async delete(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      id: z.uuid(),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+
+    await prisma.tasks.delete({ where: { id } });
+
+    return response.status(201).json();
+  }
 }
 
 export { TaskController };
