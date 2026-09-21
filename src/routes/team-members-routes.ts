@@ -17,6 +17,10 @@ teamMembersRoutes.delete(
   teamMembersController.delete,
 );
 
-teamMembersRoutes.get('/', teamMembersController.index);
+teamMembersRoutes.get(
+  '/',
+  verifyUserAuthorization(['admin, member']),
+  teamMembersController.index,
+);
 
 export { teamMembersRoutes };
