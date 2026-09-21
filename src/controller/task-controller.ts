@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { prisma } from '../database/prisma';
+import { AppError } from '../utils/AppError';
 
 class TaskController {
   async create(request: Request, response: Response) {
@@ -48,6 +49,10 @@ class TaskController {
       include: { user: true },
     });
 
+    if (task.length === 0) {
+      throw new AppError('There is no task with this id');
+    }
+
     return response.json(task);
   }
 
@@ -64,6 +69,10 @@ class TaskController {
       orderBy: { createdAt: 'desc' },
       include: { user: true },
     });
+
+    if (task.length === 0) {
+      throw new AppError('There is no task assigned to this id');
+    }
 
     return response.json(task);
   }
@@ -87,10 +96,16 @@ class TaskController {
 
     const { id } = paramsSchema.parse(request.params);
 
+    const task = await prisma.tasks.findFirst({ where: { id } });
+
+    if (!task) {
+      throw new AppError('There is no task with this id');
+    }
+
     const { title, description, status, priority, assignedTo, teamId } =
       bodySchema.parse(request.body);
 
-    const task = await prisma.tasks.update({
+    const taskUpdate = await prisma.tasks.update({
       data: {
         ...(title !== undefined && { title }),
         ...(description !== undefined && { description }),
@@ -102,7 +117,7 @@ class TaskController {
       where: { id },
     });
 
-    return response.json(task);
+    return response.json(taskUpdate);
   }
 
   async delete(request: Request, response: Response) {
