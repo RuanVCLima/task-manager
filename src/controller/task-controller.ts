@@ -67,6 +67,43 @@ class TaskController {
 
     return response.json(task);
   }
+
+  async update(request: Request, response: Response) {
+    const StatusEnum = z.enum(['pending', 'inProgress', 'completed']);
+
+    const PriorityEnum = z.enum(['high', 'medium', 'low']);
+    const bodySchema = z.object({
+      title: z.string().optional(),
+      description: z.string().optional(),
+      status: StatusEnum.optional(),
+      priority: PriorityEnum.optional(),
+      assignedTo: z.uuid().optional(),
+      teamId: z.uuid().optional(),
+    });
+
+    const paramsSchema = z.object({
+      id: z.uuid(),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+
+    const { title, description, status, priority, assignedTo, teamId } =
+      bodySchema.parse(request.body);
+
+    const task = await prisma.tasks.update({
+      data: {
+        ...(title !== undefined && { title }),
+        ...(description !== undefined && { description }),
+        ...(status !== undefined && { status }),
+        ...(priority !== undefined && { priority }),
+        ...(assignedTo !== undefined && { assignedTo }),
+        ...(assignedTo !== undefined && { teamId }),
+      },
+      where: { id },
+    });
+
+    return response.json(task);
+  }
 }
 
 export { TaskController };
