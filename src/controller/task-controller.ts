@@ -97,15 +97,25 @@ class TaskController {
     });
 
     const paramsSchema = z.object({
-      id: z.uuid(),
+      id: z.uuid().optional(),
     });
 
     const { id } = paramsSchema.parse(request.params);
+
+    if (!request.user || !request.user.role) {
+      throw new AppError('Unauthorized');
+    }
+
+    const { id: userTaskId, role } = request.user;
 
     const task = await prisma.tasks.findFirst({ where: { id } });
 
     if (!task) {
       throw new AppError('There is no task with this id');
+    }
+
+    if (role !== 'admin' && task.assignedTo !== userTaskId) {
+      throw new AppError('You can only update tasks assigned to you');
     }
 
     const { title, description, status, priority, assignedTo, teamId } =
