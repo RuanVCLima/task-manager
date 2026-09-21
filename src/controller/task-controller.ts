@@ -57,21 +57,27 @@ class TaskController {
   }
 
   async show(request: Request, response: Response) {
+    const StatusEnum = z.enum(['pending', 'inProgress', 'completed']);
+    const PriorityEnum = z.enum(['high', 'medium', 'low']);
     const querySchema = z.object({
-      assignedTo: z.uuid(),
+      assignedTo: z.uuid().optional(),
+      status: StatusEnum.optional(),
+      priority: PriorityEnum.optional(),
     });
 
-    const { assignedTo } = querySchema.parse(request.query);
+    const { assignedTo, status, priority } = querySchema.parse(request.query);
     const task = await prisma.tasks.findMany({
       where: {
-        assignedTo,
+        ...(assignedTo !== undefined && { assignedTo }),
+        ...(status !== undefined && { status }),
+        ...(priority !== undefined && { priority }),
       },
       orderBy: { createdAt: 'desc' },
       include: { user: true },
     });
 
     if (task.length === 0) {
-      throw new AppError('There is no task assigned to this id');
+      throw new AppError('Task not found');
     }
 
     return response.json(task);
