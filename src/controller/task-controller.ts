@@ -133,10 +133,28 @@ class TaskController {
       where: { id },
     });
 
+    const taskHistory = await prisma.tasksHistory.findFirst({
+      where: { taskId: id },
+      orderBy: {
+        changedBy: 'desc',
+      },
+    });
+
+    if (!taskHistory) {
+      await prisma.tasksHistory.create({
+        data: {
+          taskId: id,
+          changedBy: userTaskId,
+          newStatus: status,
+        },
+      });
+    }
+
     await prisma.tasksHistory.create({
       data: {
         taskId: id,
         changedBy: userTaskId,
+        oldStatus: taskHistory?.newStatus,
         newStatus: status,
       },
     });
