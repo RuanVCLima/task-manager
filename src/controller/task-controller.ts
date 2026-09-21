@@ -90,14 +90,14 @@ class TaskController {
     const bodySchema = z.object({
       title: z.string().optional(),
       description: z.string().optional(),
-      status: StatusEnum.optional(),
+      status: StatusEnum,
       priority: PriorityEnum.optional(),
       assignedTo: z.uuid().optional(),
       teamId: z.uuid().optional(),
     });
 
     const paramsSchema = z.object({
-      id: z.uuid().optional(),
+      id: z.uuid(),
     });
 
     const { id } = paramsSchema.parse(request.params);
@@ -131,6 +131,14 @@ class TaskController {
         ...(assignedTo !== undefined && { teamId }),
       },
       where: { id },
+    });
+
+    await prisma.tasksHistory.create({
+      data: {
+        taskId: id,
+        changedBy: userTaskId,
+        newStatus: status,
+      },
     });
 
     return response.json(taskUpdate);
