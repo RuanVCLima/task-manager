@@ -32,6 +32,41 @@ class TaskController {
 
     return response.json(task);
   }
+
+  async index(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      id: z.uuid(),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+
+    const task = await prisma.tasks.findMany({
+      where: {
+        id,
+      },
+      orderBy: { createdAt: 'desc' },
+      include: { user: true },
+    });
+
+    return response.json(task);
+  }
+
+  async show(request: Request, response: Response) {
+    const querySchema = z.object({
+      assignedTo: z.uuid(),
+    });
+
+    const { assignedTo } = querySchema.parse(request.query);
+    const task = await prisma.tasks.findMany({
+      where: {
+        assignedTo,
+      },
+      orderBy: { createdAt: 'desc' },
+      include: { user: true },
+    });
+
+    return response.json(task);
+  }
 }
 
 export { TaskController };
