@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { prisma } from '../database/prisma';
+import { AppError } from '../utils/AppError';
 
 class TeamsController {
   async create(request: Request, response: Response) {
@@ -24,7 +25,7 @@ class TeamsController {
 
   async index(request: Request, response: Response) {
     const querySchema = z.object({
-      name: z.string(),
+      name: z.string().min(1, 'name is required'),
     });
 
     const { name } = querySchema.parse(request.query);
@@ -39,24 +40,39 @@ class TeamsController {
       include: { users: true },
     });
 
+    if (teams.length === 0) {
+      throw new AppError('Team not found');
+    }
+
     response.json(teams);
   }
 
   async update(request: Request, response: Response) {
     const bodySchema = z.object({
-      id: z.uuid(),
-      name: z.string().trim().min(1, 'name is required'),
-      description: z.string(),
-      userId: z.uuid(),
+      name: z.string().trim().optional(),
+      description: z.string().optional(),
+      userId: z.uuid().optional(),
     });
 
-    const { id, name, description, userId } = bodySchema.parse(request.body);
+    const paramsSchema = z.object({
+      id: z.uuid('id is required'),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+
+    const { name, description, userId } = bodySchema.parse(request.body);
+
+    const findTeams = await prisma.teams.findFirst({ where: { id } });
+
+    if (!findTeams) {
+      throw new AppError('Team not found');
+    }
 
     const teams = await prisma.teams.update({
       data: {
-        name,
-        description,
-        userId,
+        ...(name !== undefined && { name }),
+        ...(description !== undefined && { description }),
+        ...(userId !== undefined && { userId }),
       },
       where: { id },
     });
@@ -70,6 +86,12 @@ class TeamsController {
     });
 
     const { id } = paramsSchema.parse(request.params);
+
+    const findTeams = await prisma.teams.findFirst({ where: { id } });
+
+    if (!findTeams) {
+      throw new AppError('Team not found');
+    }
 
     await prisma.teams.delete({ where: { id } });
 

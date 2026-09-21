@@ -13,8 +13,8 @@ teamsRoutes.post(
 
 teamsRoutes.get('/', verifyUserAuthorization(['admin']), teamsController.index);
 
-teamsRoutes.put(
-  '/',
+teamsRoutes.patch(
+  '/:id',
   verifyUserAuthorization(['admin']),
   teamsController.update,
 );

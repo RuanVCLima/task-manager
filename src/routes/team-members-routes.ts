@@ -19,7 +19,7 @@ teamMembersRoutes.delete(
 
 teamMembersRoutes.get(
   '/',
-  verifyUserAuthorization(['admin, member']),
+  verifyUserAuthorization(['admin', 'member']),
   teamMembersController.index,
 );
 
