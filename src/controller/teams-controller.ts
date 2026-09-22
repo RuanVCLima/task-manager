@@ -20,7 +20,7 @@ class TeamsController {
         userId,
       },
     });
-    return response.json(teams);
+    return response.status(201).json(teams);
   }
 
   async index(request: Request, response: Response) {
