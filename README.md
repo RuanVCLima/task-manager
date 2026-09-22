@@ -43,34 +43,55 @@ Authorization: Bearer <token>
 Equipes
 
 -Listar equipes
+
 -Criar equipes
+
 -Atualizar equipes
+
 -Excluir equipes
+
 -Membros de equipes
+
 -Adicionar usuários a equipes
+
 -Listar membros de uma equipe
+
 -Remover membros de uma equipe
+
 -Tarefas
+
 -Criar tarefas
+
 -Buscar tarefa por ID
+
 -Listar tarefas
+
 -Filtrar tarefas
+
 -Atualizar tarefas
+
 -Excluir tarefas
 
 As tarefas possuem status:
 
 `pending`
+
 `inProgress`
+
 `completed`
+
 E prioridade:
 
 `high`
+
 `medium`
+
 `low`
 
 Histórico de tarefas
+
 -Consultar o histórico de alterações de uma tarefa
+
 -Registrar alterações realizadas nas tarefas
 
 🔐 Autorização
