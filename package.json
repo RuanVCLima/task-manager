@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "generate": "npx prisma generate",
-    "test": "jest --watch --runInBand"
+    "test": "jest --watch --runInBand",
+    "build": "tsup src --out-dir build"
   },
   "author": "Ruan Victor",
   "license": "ISC",
@@ -39,6 +40,7 @@
     "prisma": "^7.10.0",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.12",
+    "tsup": "^8.5.1",
     "tsx": "^4.23.15",
     "typescript": "5.9",
     "typescript-eslint": "^8.70.0"
