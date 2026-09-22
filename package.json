@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/server.ts",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "tsx watch src/server",
     "lint": "eslint .",
     "format": "prettier --write .",
     "generate": "npx prisma generate",
     "test": "jest --watch --runInBand",
-    "build": "tsup src --out-dir build"
+    "build": "tsup src --out-dir build",
+    "start": "node build/server.js"
   },
   "author": "Ruan Victor",
   "license": "ISC",
