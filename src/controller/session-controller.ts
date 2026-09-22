@@ -36,7 +36,7 @@ class SessionsController {
 
     const { password: hashedPassword, ...userWithoutPassword } = user;
 
-    return response.json({ token, user: userWithoutPassword });
+    return response.status(201).json({ token, user: userWithoutPassword });
   }
 }
 

@@ -28,7 +28,7 @@ class UserController {
 
     const hashedPassword = await hash(password, 10);
 
-    await prisma.users.create({
+    const user = await prisma.users.create({
       data: {
         name,
         email,
@@ -37,7 +37,9 @@ class UserController {
       },
     });
 
-    return response.status(200).json();
+    const { password: _, ...userWithoutPassword } = user;
+
+    return response.status(201).json(userWithoutPassword);
   }
 }
 

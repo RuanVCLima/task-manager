@@ -31,7 +31,7 @@ class TaskController {
       },
     });
 
-    return response.json(task);
+    return response.status(201).json(task);
   }
 
   async index(request: Request, response: Response) {
@@ -53,7 +53,7 @@ class TaskController {
       throw new AppError('There is no task with this id');
     }
 
-    return response.json(task);
+    return response.status(201).json(task);
   }
 
   async show(request: Request, response: Response) {
@@ -80,7 +80,7 @@ class TaskController {
       throw new AppError('Task not found');
     }
 
-    return response.json(task);
+    return response.status(201).json(task);
   }
 
   async update(request: Request, response: Response) {
@@ -159,7 +159,7 @@ class TaskController {
       },
     });
 
-    return response.json(taskUpdate);
+    return response.status(201).json(taskUpdate);
   }
 
   async delete(request: Request, response: Response) {
