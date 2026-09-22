@@ -49,4 +49,78 @@ describe('TeamsController', () => {
       expect(teamsResponse.body.name).toBe('team test');
     });
   });
+
+  describe('GET/teams', () => {
+    it('should show the list of teams', async () => {
+      const teamResponse = await request(app)
+        .get('/teams')
+        .set('Authorization', `Bearer ${token}`)
+        .query({
+          name: 'team',
+        });
+
+      expect(teamResponse.status).toBe(200);
+      expect(teamResponse.body[0]).toHaveProperty('id');
+      expect(teamResponse.body[0].name).toBe('team test');
+    });
+
+    it('should throw a error if team does not exist', async () => {
+      const teamReponse = await request(app)
+        .get('/teams')
+        .set('Authorization', `Bearer ${token}`)
+        .query({
+          name: 'Non existent',
+        });
+
+      expect(teamReponse.status).toBe(400);
+      expect(teamReponse.body.message).toBe('Team not found');
+    });
+  });
+
+  describe('UPDATE/teams', () => {
+    it('should update successfully', async () => {
+      const teamResponse = await request(app)
+        .patch(`/teams/${teams_id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'update test ',
+          description: 'update test',
+        });
+
+      expect(teamResponse.status).toBe(200);
+      expect(teamResponse.body).toHaveProperty('id');
+      expect(teamResponse.body.name).toBe('update test');
+    });
+
+    it('should throw a error if team does not exist', async () => {
+      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+      const teamResponse = await request(app)
+        .patch(`/teams/${nonExistentId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'update test',
+        });
+
+      expect(teamResponse.status).toBe(400);
+      expect(teamResponse.body.message).toBe('Team not found');
+    });
+
+    it('should dele team successfully', async () => {
+      const createTeam = await request(app)
+        .post('/teams')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'team test',
+          description: 'description test',
+          userId: user_id,
+        });
+
+      const createdTeamid = createTeam.body.id;
+      const teamResponse = await request(app)
+        .delete(`/teams/${createdTeamid}`)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(teamResponse.status).toBe(200);
+    });
+  });
 });

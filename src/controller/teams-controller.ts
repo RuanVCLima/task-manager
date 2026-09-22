@@ -44,7 +44,7 @@ class TeamsController {
       throw new AppError('Team not found');
     }
 
-    response.json(teams);
+    response.status(200).json(teams);
   }
 
   async update(request: Request, response: Response) {
@@ -77,7 +77,7 @@ class TeamsController {
       where: { id },
     });
 
-    return response.json(teams);
+    return response.status(200).json(teams);
   }
 
   async delete(request: Request, response: Response) {
@@ -95,7 +95,7 @@ class TeamsController {
 
     await prisma.teams.delete({ where: { id } });
 
-    return response.status(201).json();
+    return response.status(200).json();
   }
 }
 
